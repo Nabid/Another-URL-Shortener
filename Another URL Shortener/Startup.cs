@@ -32,12 +32,15 @@ namespace Another_URL_Shortener
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "Another_URL_Shortener", Version = "v1" });
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "Anothe URL Shortener", Version = "v1" });
             });
-            services.AddDbContext<ShortURLDbContext>(options => 
-                // options.UseInMemoryDatabase("ShortURL")
-                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"))
-            );
+            //services.AddDbContext<ShortURLDbContext>(options => 
+            //    // options.UseInMemoryDatabase("ShortURL")
+            //    // options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")
+            //    //options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")
+            //    options.UseNpgsql(Configuration.GetConnectionString("DefaultConnection")
+            //));
+            services.AddEntityFrameworkNpgsql().AddDbContext<ShortURLDbContext>(o => o.UseNpgsql(Configuration.GetConnectionString("DefaultConnection")));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

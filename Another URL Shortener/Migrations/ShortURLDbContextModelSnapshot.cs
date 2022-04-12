@@ -3,10 +3,10 @@ using System;
 using Another_URL_Shortener.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
-using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
-namespace Another_URL_Shortener.Migrations
+namespace Another_URL_SHortener.Migrations
 {
     [DbContext(typeof(ShortURLDbContext))]
     partial class ShortURLDbContextModelSnapshot : ModelSnapshot
@@ -15,30 +15,30 @@ namespace Another_URL_Shortener.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("Relational:MaxIdentifierLength", 128)
+                .HasAnnotation("Relational:MaxIdentifierLength", 63)
                 .HasAnnotation("ProductVersion", "5.0.15")
-                .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
             modelBuilder.Entity("Another_URL_Shortener.Models.ShortUrl", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uuid");
 
                     b.Property<DateTime>("CreatedOn")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("timestamp without time zone");
 
                     b.Property<bool>("IsExpired")
-                        .HasColumnType("bit");
+                        .HasColumnType("boolean");
 
                     b.Property<DateTime>("ModifiedOn")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("timestamp without time zone");
 
                     b.Property<string>("ShortedURL")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("text");
 
                     b.Property<string>("URL")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("text");
 
                     b.HasKey("Id");
 
@@ -47,10 +47,10 @@ namespace Another_URL_Shortener.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("f46aec3c-3b6b-4217-82ae-3566c9986416"),
-                            CreatedOn = new DateTime(2022, 4, 8, 22, 38, 18, 850, DateTimeKind.Local).AddTicks(5538),
+                            Id = new Guid("985e8b43-f346-440a-8b01-94921ae72b86"),
+                            CreatedOn = new DateTime(2022, 4, 12, 12, 17, 29, 631, DateTimeKind.Local).AddTicks(3461),
                             IsExpired = false,
-                            ModifiedOn = new DateTime(2022, 4, 8, 22, 38, 18, 855, DateTimeKind.Local).AddTicks(6739),
+                            ModifiedOn = new DateTime(2022, 4, 12, 12, 17, 29, 633, DateTimeKind.Local).AddTicks(5617),
                             ShortedURL = "https://blog.jetbrains.com/12345",
                             URL = "https://blog.jetbrains.com/dotnet/2020/11/25/getting-started-with-entity-framework-core-5/"
                         });

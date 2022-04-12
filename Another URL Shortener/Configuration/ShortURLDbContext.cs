@@ -15,10 +15,11 @@ namespace Another_URL_Shortener.Models
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-        //    modelBuilder.Conventions.Remove<PluralizingTableNameConvention>();
+            //    modelBuilder.Conventions.Remove<PluralizingTableNameConvention>();
             modelBuilder.Entity<ShortUrl>().HasData(new ShortUrl[]{
                 new ShortUrl{ URL="https://blog.jetbrains.com/dotnet/2020/11/25/getting-started-with-entity-framework-core-5/", ShortedURL="https://blog.jetbrains.com/12345", IsExpired=false }
             });
+            //modelBuilder.FinalizeModel();
             base.OnModelCreating(modelBuilder);
         }
     }

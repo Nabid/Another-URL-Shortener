@@ -15,7 +15,7 @@ namespace Another_URL_Shortener.Controllers
     public class ShortUrlsController : ControllerBase
     {
         private readonly ShortURLDbContext _dbContext;
-        private readonly IRepository<ShortURLDbContext> _shortUrlRepository;
+        //private readonly IRepository<ShortURLDbContext> _shortUrlRepository;
 
         public ShortUrlsController(ShortURLDbContext dbContext)
         {
