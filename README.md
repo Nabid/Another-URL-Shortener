@@ -4,12 +4,15 @@
 ToDo: updating...
 
 ### Commands [Entitiy Framework, Code First]
-* ```dotnet ef migrations add InitialCreate```
-* ```dotnet ef database update```
+* First create the migration: ```dotnet ef migrations add InitialCreate```
+* Then apply the database: ```dotnet ef database update```
+* To update the schema: ```dotnet ef database update 0```
+* To drop the migration: ```dotnet ef migrations remove```
+
+### Command to build the solution
 * ```dotnet build```
 * ```dotnet restore```
 * ```dotnet run```
-* ```dotnet ef database update 0```
-* ```dotnet ef migrations remove```
+
 
 add ```--project "Another URL Shortener"``` suffix.

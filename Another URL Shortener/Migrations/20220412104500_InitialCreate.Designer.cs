@@ -10,7 +10,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Another_URL_SHortener.Migrations
 {
     [DbContext(typeof(ShortURLDbContext))]
-    [Migration("20220412101729_InitialCreate")]
+    [Migration("20220412104500_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -40,6 +40,7 @@ namespace Another_URL_SHortener.Migrations
                         .HasColumnType("text");
 
                     b.Property<string>("URL")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.HasKey("Id");
@@ -49,10 +50,10 @@ namespace Another_URL_SHortener.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("985e8b43-f346-440a-8b01-94921ae72b86"),
-                            CreatedOn = new DateTime(2022, 4, 12, 12, 17, 29, 631, DateTimeKind.Local).AddTicks(3461),
+                            Id = new Guid("975a28e0-ad89-45e4-a906-e282a6c63e62"),
+                            CreatedOn = new DateTime(2022, 4, 12, 12, 45, 0, 451, DateTimeKind.Local).AddTicks(66),
                             IsExpired = false,
-                            ModifiedOn = new DateTime(2022, 4, 12, 12, 17, 29, 633, DateTimeKind.Local).AddTicks(5617),
+                            ModifiedOn = new DateTime(2022, 4, 12, 12, 45, 0, 453, DateTimeKind.Local).AddTicks(1669),
                             ShortedURL = "https://blog.jetbrains.com/12345",
                             URL = "https://blog.jetbrains.com/dotnet/2020/11/25/getting-started-with-entity-framework-core-5/"
                         });
