@@ -11,6 +11,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Another_URL_Shortener.Configuration;
 using Another_URL_Shortener.Models;
 using Microsoft.EntityFrameworkCore;
 
@@ -34,13 +35,13 @@ namespace Another_URL_Shortener
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Anothe URL Shortener", Version = "v1" });
             });
-            //services.AddDbContext<ShortURLDbContext>(options => 
+            //services.AddDbContext<ApplicationDbContext>(options => 
             //    // options.UseInMemoryDatabase("ShortURL")
-            //    // options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")
             //    //options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")
-            //    options.UseNpgsql(Configuration.GetConnectionString("DefaultConnection")
             //));
-            services.AddEntityFrameworkNpgsql().AddDbContext<ShortURLDbContext>(o => o.UseNpgsql(Configuration.GetConnectionString("DefaultConnection")));
+            services.AddEntityFrameworkNpgsql().AddDbContext<ApplicationDbContext>(o => o.UseNpgsql(Configuration.GetConnectionString("DefaultConnection")));
+
+            services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

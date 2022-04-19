@@ -8,7 +8,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace Another_URL_SHortener.Migrations
 {
-    [DbContext(typeof(ShortURLDbContext))]
+    [DbContext(typeof(ApplicationDbContext))]
     partial class ShortURLDbContextModelSnapshot : ModelSnapshot
     {
         protected override void BuildModel(ModelBuilder modelBuilder)

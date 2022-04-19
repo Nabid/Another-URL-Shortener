@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Another_URL_Shortener.Models
 {
-    public class ShortUrl
+    public class ShortUrl: Entity
     {
         public ShortUrl()
         {

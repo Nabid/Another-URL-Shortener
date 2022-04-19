@@ -9,7 +9,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace Another_URL_SHortener.Migrations
 {
-    [DbContext(typeof(ShortURLDbContext))]
+    [DbContext(typeof(ApplicationDbContext))]
     [Migration("20220412104500_InitialCreate")]
     partial class InitialCreate
     {

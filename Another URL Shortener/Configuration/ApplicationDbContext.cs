@@ -2,9 +2,9 @@
 
 namespace Another_URL_Shortener.Models
 {
-    public class ShortURLDbContext : DbContext
+    public class ApplicationDbContext : DbContext
     {
-        public ShortURLDbContext(DbContextOptions<ShortURLDbContext> options) : base(options)
+        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
         {
             
         }

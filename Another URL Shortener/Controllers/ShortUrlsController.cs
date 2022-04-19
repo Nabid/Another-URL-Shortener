@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Another_URL_Shortener.Configuration;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -14,21 +15,27 @@ namespace Another_URL_Shortener.Controllers
     [ApiController]
     public class ShortUrlsController : ControllerBase
     {
-        private readonly ShortURLDbContext _dbContext;
-        //private readonly IRepository<ShortURLDbContext> _shortUrlRepository;
+        private readonly ApplicationDbContext _dbContext;
+        private readonly IRepository<ShortUrl> _shortUrlRepository;
 
-        public ShortUrlsController(ShortURLDbContext dbContext)
+        public ShortUrlsController(ApplicationDbContext dbContext, IRepository<ShortUrl> shortUrlRepository)
         {
             _dbContext = dbContext;
-            //_shortUrlRepository = shortUrlRepository;
+            _shortUrlRepository = shortUrlRepository;
         }
 
         // GET: api/ShortUrls
         [HttpGet]
         public async Task<ActionResult<IEnumerable<ShortUrl>>> GetShortUrls()
         {
-            //var data = _shortUrlRepository.Query().FirstOrDefault();
             return await _dbContext.ShortUrls.ToListAsync();
+        }
+
+        [HttpGet]
+        [Route("/api/ShortUrlsV2")]
+        public List<ShortUrl> GetShortUrlsV2()
+        {
+            return _shortUrlRepository.GetAll().ToList();
         }
 
         // GET: api/ShortUrls/5
