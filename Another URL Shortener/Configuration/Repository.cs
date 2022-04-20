@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Data.Common;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Threading.Tasks;
 using Another_URL_Shortener.Models;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Unity.Injection;
 
@@ -23,11 +25,12 @@ namespace Another_URL_Shortener.Configuration
         void IRepository<T>.Delete(T instance)
         {
             _entities.Remove(instance);
+            ((IRepository<T>)this).SaveContext();
         }
 
-        IEnumerable<T> IRepository<T>.Find(Expression<Func<T, bool>> predicate)
+        IQueryable<T> IRepository<T>.Find(Expression<Func<T, bool>> expression)
         {
-            return _entities.Where(predicate);
+            return _entities.Where(expression);
         }
 
         T IRepository<T>.Get(Guid id)
@@ -35,9 +38,9 @@ namespace Another_URL_Shortener.Configuration
             return _entities.Find(id);
         }
 
-        public IEnumerable<T> GetAll()
+        public async Task<List<T>> GetAll()
         {
-            return _entities.ToList();
+            return await _entities.ToListAsync();
         }
 
         IQueryable<T> IRepository<T>.Query()
@@ -45,14 +48,26 @@ namespace Another_URL_Shortener.Configuration
             return _entities;
         }
 
-        void IRepository<T>.Save(T instance)
+        void IRepository<T>.Add(T instance)
         {
             _entities.Add(instance);
+            ((IRepository<T>)this).SaveContext();
         }
 
         void IRepository<T>.Update(T instance)
         {
             _entities.Update(instance);
+            ((IRepository<T>)this).SaveContext();
+        }
+
+        async Task<int> IRepository<T>.SaveContext()
+        {
+            return await _dbContext.SaveChangesAsync();
+        }
+
+        void IRepository<T>.ModifyContextState(T t)
+        {
+            _dbContext.Entry(t).State = EntityState.Modified;
         }
     }
 }

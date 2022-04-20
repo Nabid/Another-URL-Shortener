@@ -15,34 +15,32 @@ namespace Another_URL_Shortener.Controllers
     [ApiController]
     public class ShortUrlsController : ControllerBase
     {
-        private readonly ApplicationDbContext _dbContext;
         private readonly IRepository<ShortUrl> _shortUrlRepository;
 
         public ShortUrlsController(ApplicationDbContext dbContext, IRepository<ShortUrl> shortUrlRepository)
         {
-            _dbContext = dbContext;
             _shortUrlRepository = shortUrlRepository;
         }
 
         // GET: api/ShortUrls
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<ShortUrl>>> GetShortUrls()
+        public async Task<IEnumerable<ShortUrl>> GetShortUrls()
         {
-            return await _dbContext.ShortUrls.ToListAsync();
+            return await _shortUrlRepository.GetAll();
         }
 
         [HttpGet]
         [Route("/api/ShortUrlsV2")]
-        public List<ShortUrl> GetShortUrlsV2()
+        public Task<List<ShortUrl>> GetShortUrlsV2()
         {
-            return _shortUrlRepository.GetAll().ToList();
+            return _shortUrlRepository.GetAll();
         }
 
         // GET: api/ShortUrls/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<ShortUrl>> GetShortUrl(long id)
+        public async Task<ActionResult<ShortUrl>> GetShortUrl(Guid id)
         {
-            var shortUrl = await _dbContext.ShortUrls.FindAsync(id);
+            var shortUrl = await _shortUrlRepository.Find(x => x.Id == id).FirstOrDefaultAsync();
 
             if (shortUrl == null)
             {
@@ -62,15 +60,15 @@ namespace Another_URL_Shortener.Controllers
                 return BadRequest();
             }
 
-            _dbContext.Entry(shortUrl).State = EntityState.Modified;
+            _shortUrlRepository.ModifyContextState(shortUrl);
 
             try
             {
-                await _dbContext.SaveChangesAsync();
+                await _shortUrlRepository.SaveContext();
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!ShortUrlExists(id))
+                if (_shortUrlRepository.Find(x => x.Id == id) == null)
                 {
                     return NotFound();
                 }
@@ -80,7 +78,7 @@ namespace Another_URL_Shortener.Controllers
                 }
             }
 
-            return NoContent();
+            return Ok(shortUrl);
         }
 
         // POST: api/ShortUrls
@@ -88,31 +86,27 @@ namespace Another_URL_Shortener.Controllers
         [HttpPost]
         public async Task<ActionResult<ShortUrl>> PostShortUrl(ShortUrl shortUrl)
         {
-            _dbContext.ShortUrls.Add(shortUrl);
-            await _dbContext.SaveChangesAsync();
+            _shortUrlRepository.Add(shortUrl);
+            //await _shortUrlRepository.SaveChangesAsync();
 
             return CreatedAtAction(nameof(GetShortUrl), new { id = shortUrl.Id }, shortUrl);
         }
 
         // DELETE: api/ShortUrls/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteShortUrl(long id)
+        public async Task<IActionResult> DeleteShortUrl(Guid id)
         {
-            var shortUrl = await _dbContext.ShortUrls.FindAsync(id);
+            var shortUrl = await _shortUrlRepository.Find(x => x.Id == id).FirstOrDefaultAsync();
             if (shortUrl == null)
             {
                 return NotFound();
             }
 
-            _dbContext.ShortUrls.Remove(shortUrl);
-            await _dbContext.SaveChangesAsync();
+            _shortUrlRepository.Delete(shortUrl);
+            //await _dbContext.SaveChangesAsync();
 
-            return NoContent();
-        }
-
-        private bool ShortUrlExists(Guid id)
-        {
-            return _dbContext.ShortUrls.Any(e => e.Id == id);
+            //return NoContent();
+            return Ok();
         }
     }
 }
