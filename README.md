@@ -1,5 +1,7 @@
 # Another-URL-Shortener
 .NET Web API, architecture and patterns
+* Repository pattern
+* Request handling with (self registerd) service
 
 ToDo: updating...
 
