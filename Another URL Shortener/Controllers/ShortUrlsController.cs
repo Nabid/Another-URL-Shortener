@@ -1,14 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Another_URL_Shortener.Configuration;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Another_URL_Shortener.Models;
+using Another_URL_Shortener.Repositories;
 using Another_URL_Shortener.Requests;
-using Another_URL_Shortener.Services;
 
 namespace Another_URL_Shortener.Controllers
 {
@@ -17,12 +15,10 @@ namespace Another_URL_Shortener.Controllers
     public class ShortUrlsController : GenericControllerBase
     {
         private readonly IRepository<ShortUrl> _shortUrlRepository;
-        private readonly IServiceHandler<BaseRequest> _serviceHandler;
 
         public ShortUrlsController(IRepository<ShortUrl> shortUrlRepository, IServiceHandler<BaseRequest> serviceHandler) : base(serviceHandler)
         {
             _shortUrlRepository = shortUrlRepository;
-            _serviceHandler = serviceHandler;
         }
 
         // GET: api/ShortUrls
@@ -37,7 +33,7 @@ namespace Another_URL_Shortener.Controllers
         [Route("/api/ShortUrlsV2")]
         public IActionResult GetShortUrlsV2(FirstGetRequest request)
         {
-            var response = _serviceHandler.HandleRequest(request);
+            var response = HandleRequest(request);
             return Ok(response);
         }
 
@@ -46,7 +42,7 @@ namespace Another_URL_Shortener.Controllers
         [Route("/api/ShortUrlsV3")]
         public IActionResult GetShortUrlsV3(SecondGetRequest request)
         {
-            var response = _serviceHandler.HandleRequest(request);
+            var response = HandleRequest(request);
             return Ok(response);
         }
 

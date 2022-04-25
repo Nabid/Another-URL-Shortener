@@ -7,12 +7,10 @@ namespace Another_URL_Shortener.Attributes
     public class ServiceAttribute : Attribute
     {
         public readonly IEnumerable<Type> RegisterAs;
-        //public readonly Type RequestType;
 
         public ServiceAttribute(IEnumerable<Type> registerAs)
         {
             RegisterAs = registerAs;
-            //RequestType = requestType;
         }
     }
 }

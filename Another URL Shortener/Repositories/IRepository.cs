@@ -1,13 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data.Common;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Another_URL_Shortener.Models;
-using Microsoft.AspNetCore.Mvc;
 
-namespace Another_URL_Shortener.Configuration
+namespace Another_URL_Shortener.Repositories
 {
     public interface IRepository<T> where T : Entity
     {
