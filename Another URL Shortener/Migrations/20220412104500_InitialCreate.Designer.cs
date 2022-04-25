@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
-namespace Another_URL_SHortener.Migrations
+namespace Another_URL_Shortener.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
     [Migration("20220412104500_InitialCreate")]

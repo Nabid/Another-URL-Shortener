@@ -22,7 +22,7 @@ namespace Another_URL_Shortener.Services
                 ShortedURL = GenerateTinyUrl(key),
             };
 
-            _shortUrlRepository.Save(shortUrl);
+            _shortUrlRepository.Add(shortUrl);
             return shortUrl;
         }
 
@@ -36,41 +36,27 @@ namespace Another_URL_Shortener.Services
 
         public string LoadUrl(string key)
         {
-            var shortUrl = _shortUrlRepository.Query().SingleOrDefault(x => x.URL == key);
-            if (shortUrl == null)
-            {
-                throw new Exception($"Unable to find Url from {key}");
-            }
-
-            return shortUrl.URL;
+            throw new NotImplementedException();
         }
 
-        public string LoadUrl(string key, ITinyUrlService tinyUrlService)
+        public string Get(string key, long ticks)
         {
-            var shortUrl = _shortUrlRepository.Query().SingleOrDefault(x => x.URL == key);
-            if (shortUrl != null) return shortUrl.URL;
-            //check if the key is tiny url
-            Guid convertedGuid;
-            if (!Guid.TryParse(key, out convertedGuid))
-            {
-                return tinyUrlService.LoadUrl(key);
-            }
-
-            throw new Exception($"Unable to find Url from {key}");
+            throw new NotImplementedException();
         }
 
-        public string Get(string key, long ticks, ITinyUrlService tinyUrlService)
+        public string Get(string key)
         {
-            var tinyUrl = tinyUrlService.Get(ticks);
-
-            var url = (tinyUrl != null && !string.IsNullOrEmpty(tinyUrl.URL)) ? tinyUrl.URL : LoadUrl(key, tinyUrlService);
-
-            return url;
+            throw new NotImplementedException();
         }
 
         private string GenerateTinyUrl(string key)
         {
-            return $"/t/{key}";
+            throw new NotImplementedException();
+        }
+
+        public object? GetService(Type serviceType)
+        {
+            throw new NotImplementedException();
         }
     }
 }

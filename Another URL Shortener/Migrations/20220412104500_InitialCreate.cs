@@ -1,7 +1,7 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace Another_URL_SHortener.Migrations
+namespace Another_URL_Shortener.Migrations
 {
     public partial class InitialCreate : Migration
     {
