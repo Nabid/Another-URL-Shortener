@@ -10,9 +10,12 @@ using Microsoft.OpenApi.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
+using Another_URL_Shortener.Attributes;
 using Another_URL_Shortener.Configuration;
 using Another_URL_Shortener.Models;
+using Another_URL_Shortener.Services;
 using Microsoft.EntityFrameworkCore;
 
 namespace Another_URL_Shortener
@@ -42,6 +45,9 @@ namespace Another_URL_Shortener
             services.AddEntityFrameworkNpgsql().AddDbContext<ApplicationDbContext>(o => o.UseNpgsql(Configuration.GetConnectionString("DefaultConnection")));
 
             services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
+            services.AddScoped(typeof(IServiceHandler<>), typeof(ServiceHandler<>));
+
+            ServiceLocator.LoadSelfRegisterServices(services);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -64,6 +70,38 @@ namespace Another_URL_Shortener
             {
                 endpoints.MapControllers();
             });
+        }
+    }
+
+    // Reference: https://www.codeproject.com/Tips/5311615/Completely-Selfconfigurating-Service-with-NET-5
+    public static class ServiceLocator
+    {
+        public static void LoadSelfRegisterServices(IServiceCollection services)
+        {
+            foreach (var type in AppDomain.CurrentDomain.GetAssemblies()
+                         .SelectMany(f=>f.GetTypes())
+                         .Where(e=>e.GetCustomAttribute<ServiceAttribute>(false) != null))
+            {
+                var serviceAttribute = type.GetCustomAttribute<ServiceAttribute>(false);
+                var actorTypes = serviceAttribute.RegisterAs;
+
+                if (serviceAttribute is SelfRegisterServiceAttribute)
+                {
+                    services.AddSingleton(type);
+                    foreach (var actorType in actorTypes)
+                    {
+                        services.AddSingleton(actorType, (sCol) => sCol.GetService(type));
+                    }
+                }
+                //else
+                //{
+                //    services.AddScoped(type);
+                //    foreach (var actorType in actorTypes)
+                //    {
+                //        services.AddScoped(actorType, (sCol) => sCol.GetService(type));
+                //    }
+                //}
+            }
         }
     }
 }
