@@ -7,19 +7,22 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Another_URL_Shortener.Models;
+using Another_URL_Shortener.Requests;
 using Another_URL_Shortener.Services;
 
 namespace Another_URL_Shortener.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ShortUrlsController : ControllerBase
+    public class ShortUrlsController : GenericControllerBase
     {
         private readonly IRepository<ShortUrl> _shortUrlRepository;
+        private readonly IServiceHandler<BaseRequest> _serviceHandler;
 
-        public ShortUrlsController(ApplicationDbContext dbContext, IRepository<ShortUrl> shortUrlRepository)
+        public ShortUrlsController(IRepository<ShortUrl> shortUrlRepository, IServiceHandler<BaseRequest> serviceHandler) : base(serviceHandler)
         {
             _shortUrlRepository = shortUrlRepository;
+            _serviceHandler = serviceHandler;
         }
 
         // GET: api/ShortUrls
@@ -29,11 +32,22 @@ namespace Another_URL_Shortener.Controllers
             return await _shortUrlRepository.GetAll();
         }
 
+        // GET: api/ShortUrls
         [HttpGet]
         [Route("/api/ShortUrlsV2")]
-        public Task<List<ShortUrl>> GetShortUrlsV2()
+        public IActionResult GetShortUrlsV2(FirstGetRequest request)
         {
-            return _shortUrlRepository.GetAll();
+            var response = _serviceHandler.HandleRequest(request);
+            return Ok(response);
+        }
+
+        // GET: api/ShortUrls
+        [HttpGet]
+        [Route("/api/ShortUrlsV3")]
+        public IActionResult GetShortUrlsV3(SecondGetRequest request)
+        {
+            var response = _serviceHandler.HandleRequest(request);
+            return Ok(response);
         }
 
         // GET: api/ShortUrls/5
@@ -103,9 +117,6 @@ namespace Another_URL_Shortener.Controllers
             }
 
             _shortUrlRepository.Delete(shortUrl);
-            //await _dbContext.SaveChangesAsync();
-
-            //return NoContent();
             return Ok();
         }
     }
