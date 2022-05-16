@@ -35,9 +35,14 @@ namespace Another_URL_Shortener.Controllers
 
         // GET: api/ShortUrls/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<ShortUrl>> GetShortUrl(GetShortUrlsRequest shortUrlsRequest)
+        public async Task<ActionResult<ShortUrl>> GetShortUrl(Guid id)
         {
-            var response = await _serviceHandler.HandleRequest(shortUrlsRequest);
+            var response = (GetShortUrlsResponse)await _serviceHandler.HandleRequest(new GetShortUrlsRequest() { Id = id });
+            if (!response.ShortUrls.Any())
+            {
+                return NotFound();
+            }
+
             return Ok(response);
         }
 
@@ -85,16 +90,16 @@ namespace Another_URL_Shortener.Controllers
 
         // DELETE: api/ShortUrls/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteShortUrl(DeleteShortUrlsRequest request)
+        public async Task<IActionResult> DeleteShortUrl(Guid id)
         {
-            var response = await _serviceHandler.HandleRequest(request);
+            var response = await _serviceHandler.HandleRequest(new DeleteShortUrlsRequest(){Id = id});
 
             if (response == null)
             {
                 return NotFound();
             }
 
-            return Ok(response);
+            return Ok();
         }
     }
 }

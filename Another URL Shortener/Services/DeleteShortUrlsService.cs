@@ -31,7 +31,6 @@ namespace Another_URL_Shortener.Services
             }
             _shortUrlRepository.Delete(shortUrl);
             
-            resp.ShortUrls.Add(shortUrl);
             return resp;
         }
     }

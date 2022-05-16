@@ -38,8 +38,11 @@ namespace Another_URL_Shortener.Services
             if (req.Id != null)
             {
                 var result = await _shortUrlRepository.Get((Guid)req.Id);
-                result.ShortedURL = AddBaseValue(result.ShortedURL);
-                resp.ShortUrls.Add(result);
+                if (result != null)
+                {
+                    result.ShortedURL = AddBaseValue(result.ShortedURL);
+                    resp.ShortUrls.Add(result);
+                }
             }
             else
             {

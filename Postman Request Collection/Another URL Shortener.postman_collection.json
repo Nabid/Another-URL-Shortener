@@ -1,0 +1,159 @@
+{
+	"info": {
+		"_postman_id": "5748ffe6-385a-49ce-a94d-0205dd3d4f5a",
+		"name": "Another URL Shortener [PERSONAL PROJECT]",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "all Items",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseurl}}/api/ShortUrls",
+					"host": [
+						"{{baseurl}}"
+					],
+					"path": [
+						"api",
+						"ShortUrls"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "single item",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseurl}}/api/ShortUrls/da6fa9de-7388-4e58-a725-34d5aefe9b07",
+					"host": [
+						"{{baseurl}}"
+					],
+					"path": [
+						"api",
+						"ShortUrls",
+						"da6fa9de-7388-4e58-a725-34d5aefe9b07"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "update",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"id\": \"da6fa9de-7388-4e58-a725-34d5aefe9b07\",\r\n    \"url\": \"xx3x\",\r\n    \"shortedURL\": \"yyy3\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseurl}}/api/ShortUrls/da6fa9de-7388-4e58-a725-34d5aefe9b07",
+					"host": [
+						"{{baseurl}}"
+					],
+					"path": [
+						"api",
+						"ShortUrls",
+						"da6fa9de-7388-4e58-a725-34d5aefe9b07"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "create",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"URL\": \"htxxxtp://face.com\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseurl}}/api/ShortUrls",
+					"host": [
+						"{{baseurl}}"
+					],
+					"path": [
+						"api",
+						"ShortUrls"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "delete item",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{baseurl}}/api/ShortUrls/da6fa9de-7388-4e58-a725-34d5aefe9b07",
+					"host": [
+						"{{baseurl}}"
+					],
+					"path": [
+						"api",
+						"ShortUrls",
+						"da6fa9de-7388-4e58-a725-34d5aefe9b07"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "baseurl",
+			"value": "https://localhost:5001",
+			"type": "default"
+		}
+	]
+}
