@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Another_URL_Shortener.Configuration;
 using Microsoft.AspNetCore.Mvc;
@@ -61,7 +62,7 @@ namespace Another_URL_Shortener.Controllers
                 return NotFound();
             }
 
-            return Ok(shortUrl);
+            return Ok(response.ShortUrls.FirstOrDefault());
         }
 
         // POST: api/ShortUrls
