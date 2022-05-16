@@ -17,8 +17,13 @@ namespace Another_URL_Shortener
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
+        public Startup(IConfiguration configuration, IWebHostEnvironment env)
         {
+            var builder = new ConfigurationBuilder()
+                .SetBasePath(env.ContentRootPath)
+                .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
+
+
             Configuration = configuration;
         }
 
@@ -27,7 +32,6 @@ namespace Another_URL_Shortener
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {
@@ -38,6 +42,8 @@ namespace Another_URL_Shortener
             //    //options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")
             //));
             services.AddEntityFrameworkNpgsql().AddDbContext<ApplicationDbContext>(o => o.UseNpgsql(Configuration.GetConnectionString("DefaultConnection")));
+
+            services.Configure<CustomConfig>(Configuration.GetSection("CustomConfig"));
 
             services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
             services.AddScoped(typeof(IServiceHandler<>), typeof(ServiceHandler<>));

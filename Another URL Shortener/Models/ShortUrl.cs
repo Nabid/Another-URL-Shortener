@@ -19,6 +19,7 @@ namespace Another_URL_Shortener.Models
         [Required]
         public string URL { get; set; }
         
+        // ToDo: has to be unique
         public string ShortedURL { get; set; }
         
         public bool IsExpired { get; set; }

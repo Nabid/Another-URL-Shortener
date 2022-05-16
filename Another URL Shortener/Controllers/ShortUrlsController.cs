@@ -70,10 +70,15 @@ namespace Another_URL_Shortener.Controllers
         [HttpPost]
         public async Task<ActionResult<ShortUrl>> PostShortUrl(ShortUrl shortUrl)
         {
-            var response = (GetShortUrlsResponse) await _serviceHandler.HandleRequest(new PostShortUrlRequest()
+            var response = await _serviceHandler.HandleRequest(new PostShortUrlRequest()
             {
                 ShortUrl = shortUrl
             });
+
+            if (response is ExceptionResponse { Message: { } } exceptionResponse)
+            {
+                return Problem(exceptionResponse.Message);
+            }
 
             return CreatedAtAction(nameof(GetShortUrl), new { id = shortUrl.Id }, shortUrl);
         }
