@@ -52,8 +52,12 @@ namespace Another_URL_Shortener
             {
                 app.UseDeveloperExceptionPage();
                 app.UseSwagger();
-                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Another_URL_Shortener v1"));
+                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Another URL Shortener v1"));
             }
+
+#if DEBUG
+            app.UseDeveloperExceptionPage();
+#endif
 
             app.UseHttpsRedirection();
 
@@ -82,18 +86,18 @@ namespace Another_URL_Shortener
 
                 if (serviceAttribute is SelfRegisterServiceAttribute)
                 {
-                    services.AddSingleton(type);
+                    services.AddScoped(type);
                     foreach (var actorType in actorTypes)
                     {
-                        services.AddSingleton(actorType, (sCol) => sCol.GetService(type));
+                        services.AddScoped(actorType, (sCol) => sCol.GetService(type));
                     }
                 }
                 //else
                 //{
-                //    services.AddScoped(type);
+                //    services.AddSingleton(type);
                 //    foreach (var actorType in actorTypes)
                 //    {
-                //        services.AddScoped(actorType, (sCol) => sCol.GetService(type));
+                //        services.AddSingleton(actorType, (sCol) => sCol.GetService(type));
                 //    }
                 //}
             }

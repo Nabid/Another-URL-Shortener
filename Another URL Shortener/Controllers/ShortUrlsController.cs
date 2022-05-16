@@ -7,57 +7,37 @@ using Microsoft.EntityFrameworkCore;
 using Another_URL_Shortener.Models;
 using Another_URL_Shortener.Repositories;
 using Another_URL_Shortener.Requests;
+using Another_URL_Shortener.Responses;
+using Another_URL_Shortener.Services;
 
 namespace Another_URL_Shortener.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ShortUrlsController : GenericControllerBase
+    public class ShortUrlsController : ControllerBase
     {
-        private readonly IRepository<ShortUrl> _shortUrlRepository;
+        readonly IServiceHandler<BaseRequest> _serviceHandler;
 
-        public ShortUrlsController(IRepository<ShortUrl> shortUrlRepository, IServiceHandler<BaseRequest> serviceHandler) : base(serviceHandler)
+        public ShortUrlsController(IServiceHandler<BaseRequest> serviceHandler)
         {
-            _shortUrlRepository = shortUrlRepository;
+            _serviceHandler = serviceHandler;
         }
 
         // GET: api/ShortUrls
         [HttpGet]
-        public async Task<IEnumerable<ShortUrl>> GetShortUrls()
+        //[Route("/api/ShortUrls")]
+        public async Task<IActionResult> GetShortUrls()
         {
-            return await _shortUrlRepository.GetAll();
-        }
-
-        // GET: api/ShortUrls
-        [HttpGet]
-        [Route("/api/ShortUrlsV2")]
-        public IActionResult GetShortUrlsV2(FirstGetRequest request)
-        {
-            var response = HandleRequest(request);
-            return Ok(response);
-        }
-
-        // GET: api/ShortUrls
-        [HttpGet]
-        [Route("/api/ShortUrlsV3")]
-        public IActionResult GetShortUrlsV3(SecondGetRequest request)
-        {
-            var response = HandleRequest(request);
+            var response = await _serviceHandler.HandleRequest(new GetShortUrlsRequest());
             return Ok(response);
         }
 
         // GET: api/ShortUrls/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<ShortUrl>> GetShortUrl(Guid id)
+        public async Task<ActionResult<ShortUrl>> GetShortUrl(GetShortUrlsRequest shortUrlsRequest)
         {
-            var shortUrl = await _shortUrlRepository.Find(x => x.Id == id).FirstOrDefaultAsync();
-
-            if (shortUrl == null)
-            {
-                return NotFound();
-            }
-
-            return shortUrl;
+            var response = await _serviceHandler.HandleRequest(shortUrlsRequest);
+            return Ok(response);
         }
 
         // PUT: api/ShortUrls/5
@@ -70,22 +50,15 @@ namespace Another_URL_Shortener.Controllers
                 return BadRequest();
             }
 
-            _shortUrlRepository.ModifyContextState(shortUrl);
+            var response = (GetShortUrlsResponse)await _serviceHandler.HandleRequest(new PostShortUrlRequest()
+            {
+                ShortUrl = shortUrl,
+                IsModified = true
+            });
 
-            try
+            if (response == null)
             {
-                await _shortUrlRepository.SaveContext();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (_shortUrlRepository.Find(x => x.Id == id) == null)
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
+                return NotFound();
             }
 
             return Ok(shortUrl);
@@ -96,24 +69,26 @@ namespace Another_URL_Shortener.Controllers
         [HttpPost]
         public async Task<ActionResult<ShortUrl>> PostShortUrl(ShortUrl shortUrl)
         {
-            _shortUrlRepository.Add(shortUrl);
-            //await _shortUrlRepository.SaveChangesAsync();
+            var response = (GetShortUrlsResponse) await _serviceHandler.HandleRequest(new PostShortUrlRequest()
+            {
+                ShortUrl = shortUrl
+            });
 
             return CreatedAtAction(nameof(GetShortUrl), new { id = shortUrl.Id }, shortUrl);
         }
 
         // DELETE: api/ShortUrls/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteShortUrl(Guid id)
+        public async Task<IActionResult> DeleteShortUrl(DeleteShortUrlsRequest request)
         {
-            var shortUrl = await _shortUrlRepository.Find(x => x.Id == id).FirstOrDefaultAsync();
-            if (shortUrl == null)
+            var response = await _serviceHandler.HandleRequest(request);
+
+            if (response == null)
             {
                 return NotFound();
             }
 
-            _shortUrlRepository.Delete(shortUrl);
-            return Ok();
+            return Ok(response);
         }
     }
 }

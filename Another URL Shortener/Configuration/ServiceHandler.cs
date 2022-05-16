@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Threading.Tasks;
 using Another_URL_Shortener.Requests;
 using Another_URL_Shortener.Responses;
 using Another_URL_Shortener.Services;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Another_URL_Shortener.Configuration
@@ -15,10 +17,10 @@ namespace Another_URL_Shortener.Configuration
             _serviceProvider = serviceProvider;
         }
 
-        public BaseResponse HandleRequest(TRequest request)
+        public Task<BaseResponse> HandleRequest(TRequest request)
         {
             //return _serviceProvider.GetRequiredService<IGenericService>().Handle(request);
-            return (_serviceProvider.GetRequiredService(request.GetType()) as IGenericService).Handle(request);
+            return ((IGenericService)_serviceProvider.GetRequiredService(request.GetType())).Handle(request);
         }
     }
 }

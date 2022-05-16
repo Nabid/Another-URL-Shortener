@@ -1,10 +1,11 @@
-﻿using Another_URL_Shortener.Requests;
+﻿using System.Threading.Tasks;
+using Another_URL_Shortener.Requests;
 using Another_URL_Shortener.Responses;
 
 namespace Another_URL_Shortener.Services
 {
     public interface IGenericService
     {
-        BaseResponse Handle(BaseRequest request);
+        Task<BaseResponse> Handle(BaseRequest request);
     }
 }

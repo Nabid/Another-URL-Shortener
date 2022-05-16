@@ -13,7 +13,7 @@ namespace Another_URL_Shortener.Repositories
         void Update(T instance);
         void Delete(T instance);
         IQueryable<T> Query(); // executes chain of query on server -- it breaks the idea of repository
-        T Get(Guid id);
+        Task<T> Get(Guid id);
         Task<List<T>> GetAll(); // fetches data in memory and then applies filters
         IQueryable<T> Find(Expression<Func<T, bool>> predicate);
         Task<int> SaveContext();

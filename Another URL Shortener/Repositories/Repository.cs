@@ -30,9 +30,9 @@ namespace Another_URL_Shortener.Repositories
             return _entities.Where(expression);
         }
 
-        T IRepository<T>.Get(Guid id)
+        async Task<T> IRepository<T>.Get(Guid id)
         {
-            return _entities.Find(id);
+            return await _entities.FindAsync(id);
         }
 
         public async Task<List<T>> GetAll()
