@@ -5,6 +5,8 @@
 * Self registered services with scoped lifetime
 * Request handling by services
 
+[![.NET](https://github.com/Nabid/Another-URL-Shortener/actions/workflows/dotnet.yml/badge.svg?branch=master)](https://github.com/Nabid/Another-URL-Shortener/actions/workflows/dotnet.yml) [![CodeQL](https://github.com/Nabid/Another-URL-Shortener/actions/workflows/codeql-analysis.yml/badge.svg?branch=master)](https://github.com/Nabid/Another-URL-Shortener/actions/workflows/codeql-analysis.yml)
+
 ToDo: updating...
 
 ### Commands [Entitiy Framework, Code First]
