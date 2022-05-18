@@ -16,9 +16,9 @@ namespace Another_URL_Shortener.Services
     {
         private readonly IRepository<ShortUrl> _shortUrlRepository;
 
-        private readonly IOptions<CustomConfig> _settings;
+        private readonly IOptions<CustomConfigs> _settings;
 
-        public GetShortUrlsService(IRepository<ShortUrl> shortUrlRepository, IOptions<CustomConfig> settings)
+        public GetShortUrlsService(IRepository<ShortUrl> shortUrlRepository, IOptions<CustomConfigs> settings)
         {
             _shortUrlRepository = shortUrlRepository;
             _settings = settings;
@@ -27,7 +27,7 @@ namespace Another_URL_Shortener.Services
 
         private string AddBaseValue(string url)
         {
-            return $"{_settings.Value.RootURL}/{url}";
+            return $"{_settings.Value.BaseAddress}/{url}";
         }
 
         public async Task<BaseResponse> Handle(BaseRequest request)
