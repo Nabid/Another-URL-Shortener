@@ -1,7 +1,9 @@
 # Another URL Shortener
 .NET 5 Web API, architecture and patterns
 * Repository pattern
-* Request handling with (self registerd) service
+* Dependency injection
+* Self registered services with scoped lifetime
+* Request handling by services
 
 ToDo: updating...
 
