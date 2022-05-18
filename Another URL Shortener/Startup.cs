@@ -43,7 +43,7 @@ namespace Another_URL_Shortener
             //));
             services.AddEntityFrameworkNpgsql().AddDbContext<ApplicationDbContext>(o => o.UseNpgsql(Configuration.GetConnectionString("DefaultConnection")));
 
-            services.Configure<CustomConfig>(Configuration.GetSection("CustomConfig"));
+            services.Configure<CustomConfigs>(Configuration.GetSection("CustomConfigs"));
 
             services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
             services.AddScoped(typeof(IServiceHandler<>), typeof(ServiceHandler<>));
