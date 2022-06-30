@@ -5,6 +5,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using System;
+using System.Collections;
 using System.Linq;
 using System.Reflection;
 using Another_URL_Shortener.Attributes;
@@ -35,20 +36,25 @@ namespace Another_URL_Shortener
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "Anothe URL Shortener", Version = "v1" });
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "Another URL Shortener", Version = "v1" });
             });
-            //services.AddDbContext<ApplicationDbContext>(options => 
-            //    // options.UseInMemoryDatabase("ShortURL")
-            //    //options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")
-            //));
-            services.AddEntityFrameworkNpgsql().AddDbContext<ApplicationDbContext>(o => o.UseNpgsql(Configuration.GetConnectionString("DefaultConnection")));
+            
+            services.AddDbContext<ApplicationDbContext>(o => o.UseNpgsql(Configuration.GetConnectionString("DefaultConnection")));
+            services.AddDbContext<CacheDbContext>(o => o.UseInMemoryDatabase("CachedShortUrl"));
 
             services.Configure<CustomConfigs>(Configuration.GetSection("CustomConfigs"));
 
             services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
+            services.AddScoped(typeof(ICachedDbRepository<>), typeof(CachedDbRepository<>));
             services.AddScoped(typeof(IServiceHandler<>), typeof(ServiceHandler<>));
 
             ServiceLocator.LoadSelfRegisterServices(services);
+
+            var ht = new Hashtable
+            {
+                { "key1", null },
+                { "x", null }
+            };
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

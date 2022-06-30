@@ -1,14 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
 using Another_URL_Shortener.Attributes;
+using Another_URL_Shortener.Configuration;
 using Another_URL_Shortener.Models;
 using Another_URL_Shortener.Repositories;
 using Another_URL_Shortener.Requests;
 using Another_URL_Shortener.Responses;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 
 namespace Another_URL_Shortener.Services
 {
@@ -16,13 +19,17 @@ namespace Another_URL_Shortener.Services
     public class PostShortUrlService: IGenericService
     {
         private readonly IRepository<ShortUrl> _shortUrlRepository;
+        private readonly ICachedDbRepository<CachedShortUrl> _cachedShortUrlRepository;
+        private readonly IOptions<CustomConfigs> _settings;
 
-        public PostShortUrlService(IRepository<ShortUrl> shortUrlRepository)
+        public PostShortUrlService(IRepository<ShortUrl> shortUrlRepository, IOptions<CustomConfigs> settings, ICachedDbRepository<CachedShortUrl> cachedShortUrlRepository)
         {
             _shortUrlRepository = shortUrlRepository;
+            _settings = settings;
+            _cachedShortUrlRepository = cachedShortUrlRepository;
         }
 
-        private bool IsValidUrl(string url)
+        private static bool IsValidUrl(string url)
         {
             if (Uri.TryCreate(url, UriKind.Absolute, out Uri validatedUri)) //.NET URI validation.
             {
@@ -32,22 +39,32 @@ namespace Another_URL_Shortener.Services
             return false;
         }
 
-        private string GetUniqueId()
+        private static string GenerateUniqueId(int length)
         {
             /* Ref: https://stackoverflow.com/a/44960751/3731282
             "It creates random ids of size 11 characters. You can increase/decrease that as well, just change the parameter of Take method.
-            0.001% duplicates in 100 million."
-             */
+            0.001% duplicates in 100 million."*/
             var builder = new StringBuilder();
             Enumerable
-                .Range(65, 26)
-                .Select(e => ((char)e).ToString())
+                .Range(65, 26).Select(e => ((char)e).ToString())
                 .Concat(Enumerable.Range(97, 26).Select(e => ((char)e).ToString()))
                 .Concat(Enumerable.Range(0, 10).Select(e => e.ToString()))
-                .OrderBy(e => Guid.NewGuid())
-                .Take(11)
-                .ToList().ForEach(e => builder.Append(e));
+                .OrderBy(e => Guid.NewGuid()) // randomize order
+                .Take(length)
+                .ToList()
+                .ForEach(e => builder.Append(e));
             return builder.ToString();
+        }
+
+        private string GetUniqueId()
+        {
+            var uniqueId = GenerateUniqueId(_settings.Value.UniqueIdLength);
+            var res = _cachedShortUrlRepository.Find(x => x.Id == uniqueId).FirstOrDefault();
+            while (_cachedShortUrlRepository.Find(x => x.Id == uniqueId).FirstOrDefault() != null)
+            {
+                uniqueId = GenerateUniqueId(_settings.Value.UniqueIdLength);
+            }
+            return uniqueId;
         }
 
         public async Task<BaseResponse> Handle(BaseRequest request)
@@ -90,6 +107,11 @@ namespace Another_URL_Shortener.Services
             else
             {
                 req.ShortUrl.ShortedURL ??= GetUniqueId();
+                _cachedShortUrlRepository.Add(new CachedShortUrl()
+                {
+                    Id = req.ShortUrl.ShortedURL,
+                    ActualUrl = req.ShortUrl.URL
+                });
                 _shortUrlRepository.Add(req.ShortUrl);
             }
 
