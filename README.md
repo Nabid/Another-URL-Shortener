@@ -76,7 +76,7 @@ Request to: http://localhost:44326/api/ShortUrls/
 * Execute from `/docker/`: `kubectl apply -f ./deploy-webapi.yml`
 * Run ` kubectl get all` and make sure the `another-url-shortener-kube-webapi` (Service) and `another-url-shortener-kube-webapp` (LoadBalancer) are running:
 
-![screenshot](.\images\kubernetes_clusters.png)
+![screenshot](images/kubernetes_clusters.png)
 
 Request to: http://localhost:44326/api/ShortUrls/
 
