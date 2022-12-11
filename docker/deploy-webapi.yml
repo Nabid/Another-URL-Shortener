@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: another-url-shortener-kube
+  labels:
+    app: weather-forecast
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      service: another-url-shortener-kube
+  template:
+    metadata:
+      labels:
+        app: weather-forecast
+        service: another-url-shortener-kube
+    spec:
+      containers:
+        - name: another-url-shortener-kube
+          image: another-url-shortener-image
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 44326
+              protocol: TCP
+          env:
+            - name: CONNECT_TO
+              value: http://+:44326
+          resources:          
+            limits:            
+              memory: "64Mi"            
+              cpu: "128m"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: another-url-shortener-kube
+  labels:
+    app: weather-forecast
+    service: another-url-shortener-kube
+spec:
+  ports:
+    - port: 44326
+      targetPort: 44326
+      # protocol: TCP
+  selector:
+    service: another-url-shortener-kube

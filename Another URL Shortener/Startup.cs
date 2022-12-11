@@ -41,7 +41,7 @@ namespace Another_URL_Shortener
             //    // options.UseInMemoryDatabase("ShortURL")
             //    //options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")
             //));
-            services.AddEntityFrameworkNpgsql().AddDbContext<ApplicationDbContext>(o => o.UseNpgsql(Configuration.GetConnectionString("DefaultConnection")));
+            services.AddEntityFrameworkNpgsql().AddDbContext<ApplicationDbContext>(o => o.UseNpgsql(Configuration.GetConnectionString("DockerAppLocalSql")));
 
             services.Configure<CustomConfigs>(Configuration.GetSection("CustomConfigs"));
 
