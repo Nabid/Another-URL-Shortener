@@ -7,44 +7,80 @@ In this project I am designing a URL shortener Web API using .NET 5, REST API, P
 * Self registered services with scoped lifetime
 * Request handling by services
 * Code first approach
+* Docker/Kubernetes
 
 [![.NET](https://github.com/Nabid/Another-URL-Shortener/actions/workflows/dotnet.yml/badge.svg?branch=master)](https://github.com/Nabid/Another-URL-Shortener/actions/workflows/dotnet.yml) [![CodeQL](https://github.com/Nabid/Another-URL-Shortener/actions/workflows/codeql-analysis.yml/badge.svg?branch=master)](https://github.com/Nabid/Another-URL-Shortener/actions/workflows/codeql-analysis.yml)
 
-Note: updating... the project is ongoing and let's say 80% finished. Next todo includes connection to redis and verify unique shortened key.
+Note: updating... the project is ongoing and let's say 95% finished. Next todo includes verify unique shortened key.
 
-## Commands [Entitiy Framework, Code First]
-* First create the migration: ```dotnet ef migrations add InitialCreate```
+***Note:*** this is neither production ready, nor configured to run in live servers. For example: postgres security, encryption etc. are not included.
+
+## System details
+|product|version|
+|-|-|
+|MacOS|Ventura 13.0.1|
+|Visual Studio|2022|
+|Visual Studio Code|1.73.1|
+|.NET|5.0|
+|dotnet|5.0.400|
+|dotnet ef|6.0.3|
+|PostgreSQL|12.0|
+|Docker desktop|20.10.21|
+|Kubernetes|1.25.1|
+
+## Configure and run
+### Step 1: setup Entity Framework and code-first
+* Install ```dotnet-ef``` if needed, check [documentation](https://learn.microsoft.com/en-us/ef/core/cli/dotnet).
+* Create ef migration: ```dotnet ef migrations add InitialCreate```. In this branch, `InitialCreate` has been already created, check `Migrations` directory.
 * Then apply the database (double check connection string): ```dotnet ef database update```
-* Update the schema (if changed after creation): ```dotnet ef database update 0```
+* Update schema (if changed after creation): ```dotnet ef database update 0```
 * Drop the migration: ```dotnet ef migrations remove```
 
-## Command to build the solution
+### Step 2: build the solution
+From root directory where `.sln` is located (add ```--project "Another URL Shortener"``` suffix in following commands) or from `Another URL Shortener` where `.csproj` is located:
 * ```dotnet build```
 * ```dotnet restore```
 * ```dotnet run```
 
-add ```--project "Another URL Shortener"``` suffix.
-
 Request to: https://localhost:5001/api/ShortUrls/
 
-## Docker steps
-* Create Dockerfile
-* Create .dockerignore
-* Update Postgres configuration `pg_hbf.conf` to accept all requests:
-`host    all             all             0.0.0.0/0               md5`
+### Step 3: docker steps
+#### Prepare Docker desktop
+* Create Dockerfile and .dockerignore (already created)
+
+#### Prepare Postgres
+* Update Postgres configuration `pg_hba.conf` to accept all requests:
+`host    all             all             192.168.0.127/0         trust`
 \***
+* and update Postgres configuration `postgresql.conf` to listen on all addresses:
+`listen_addresses = '*'` \***
 * Then restart Postgres service
 * Correct `ConnectionStrings`: update host address in `DockerAppLocalSql`
 * Add `DockerAppLocalSql` in `Startup.cs`
 
-*** Reference: [Stackoverflow](https://stackoverflow.com/a/31249288/3731282)
-### Commands
-* ```docker build -t another-url-shortener-image -f Dockerfile ../Another\ URL\ Shortener```
-* THIS ```docker create -p 44326:80 --name another-url-shortener-container another-url-shortener-image```
-* ```docker start another-url-shortener-container```
-* OR THIS ```docker run -rm -p 44326:80 another-url-shortener-image```
+*** Reference: [Stackoverflow](https://stackoverflow.com/a/31249288/3731282), [thegeekstuff](https://www.thegeekstuff.com/2014/02/enable-remote-postgresql-connection/)
+
+#### docker build commands
+From `/docker/` directory execute following commands:
+1. ```docker build -t another-url-shortener-image -f Dockerfile ../Another\ URL\ Shortener```
+2. THIS:
+    1. ```docker create -p 44326:80 --name another-url-shortener-container another-url-shortener-image```
+    2. ```docker start another-url-shortener-container```
+3. OR THIS ```docker run -rm -p 44326:80 another-url-shortener-image```
 
 Request to: http://localhost:44326/api/ShortUrls/
+
+### Step 4: deploy via kubernetes
+* 'Prepare Postgres' step needed.
+* Create kube deploy service (already created in `/docker/deploy-webapi.yml`)
+* Execute from `/docker/`: `kubectl apply -f ./deploy-webapi.yml`
+* Run ` kubectl get all` and make sure the `another-url-shortener-kube-webapi` (Service) and `another-url-shortener-kube-webapp` (LoadBalancer) are running:
+
+![screenshot](.\images\kubernetes_clusters.png)
+
+Request to: http://localhost:44326/api/ShortUrls/
+
+More details at [Microsoft documentation](https://learn.microsoft.com/en-us/dotnet/architecture/containerized-lifecycle/design-develop-containerized-apps/build-aspnet-core-applications-linux-containers-aks-kubernetes).
 
 ## Troubleshoot
 ### Unable to start Kestrel

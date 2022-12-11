@@ -1,46 +1,45 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: another-url-shortener-kube-webapi
+  name: another-url-shortener-kube-webapp
   labels:
     app: weather-forecast
 spec:
   replicas: 1
   selector:
     matchLabels:
-      service: another-url-shortener-kube-webapi
+      service: another-url-shortener-kube-webapp
   template:
     metadata:
       labels:
         app: weather-forecast
-        service: another-url-shortener-kube-webapi
+        service: another-url-shortener-kube-webapp
     spec:
       containers:
-        - name: another-url-shortener-kube-webapi
+        - name: another-url-shortener-kube-webapp
           image: another-url-shortener-image
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 44326
               protocol: TCP
           env:
-            - name: CONNECT_TO
+            - name: ASPNETCORE_URLS
               value: http://+:44326
-          resources:          
-            limits:            
-              memory: "64Mi"            
-              cpu: "128m"
+            - name: WebApiBaseAddress
+              value: http://webapi
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: another-url-shortener-kube-webapi
+  name: another-url-shortener-kube-webapp
   labels:
     app: weather-forecast
-    service: another-url-shortener-kube-webapi
+    service: another-url-shortener-kube-webapp
 spec:
+  type: LoadBalancer
   ports:
     - port: 44326
       targetPort: 44326
       protocol: TCP
   selector:
-    service: another-url-shortener-kube-webapi
+    service: another-url-shortener-kube-webapp
