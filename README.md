@@ -1,13 +1,16 @@
 # Another URL Shortener
-.NET 5 Web API, architecture and patterns
+
+In this project I am designing a URL shortener Web API using .NET 5, REST API, Postgres and Redis. This application is deployable separately as a standalone service using Docker and Kubernetes (they both are mutually exclusive, keeping both as example for new learners). I have used following architecture and patterns so to say:
+* Request driven architecture
 * Repository pattern
 * Dependency injection
 * Self registered services with scoped lifetime
 * Request handling by services
+* Code first approach
 
 [![.NET](https://github.com/Nabid/Another-URL-Shortener/actions/workflows/dotnet.yml/badge.svg?branch=master)](https://github.com/Nabid/Another-URL-Shortener/actions/workflows/dotnet.yml) [![CodeQL](https://github.com/Nabid/Another-URL-Shortener/actions/workflows/codeql-analysis.yml/badge.svg?branch=master)](https://github.com/Nabid/Another-URL-Shortener/actions/workflows/codeql-analysis.yml)
 
-ToDo: updating...
+Note: updating... the project is ongoing and let's say 80% finished. Next todo includes connection to redis and verify unique shortened key.
 
 ## Commands [Entitiy Framework, Code First]
 * First create the migration: ```dotnet ef migrations add InitialCreate```
