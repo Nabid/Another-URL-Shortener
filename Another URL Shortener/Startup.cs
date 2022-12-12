@@ -35,7 +35,7 @@ namespace Another_URL_Shortener
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "Anothe URL Shortener", Version = "v1" });
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "Another URL Shortener", Version = "v1" });
             });
             //services.AddDbContext<ApplicationDbContext>(options => 
             //    // options.UseInMemoryDatabase("ShortURL")

@@ -70,11 +70,12 @@ From `/docker/` directory execute following commands:
 
 Request to: http://localhost:44326/api/ShortUrls/
 
-### Step 4: deploy via kubernetes
+### Step 4: deploy via Kubernetes
 * 'Prepare Postgres' step needed.
-* Create kube deploy service (already created in `/docker/deploy-webapi.yml`)
-* Execute from `/docker/`: `kubectl apply -f ./deploy-webapi.yml`
-* Run ` kubectl get all` and make sure the `another-url-shortener-kube-webapi` (Service) and `another-url-shortener-kube-webapp` (LoadBalancer) are running:
+* Docker image build needed.
+* Create Kubernetes deploy services (already created in `/docker/deploy-webapi.yml` and `/docker/deploy-webapp.yml`)
+* Execute from `/docker/` directory: `kubectl apply -f ./`
+* Run ` kubectl get all` and make sure the `another-url-shortener-kube-webapi` (Service) and `another-url-shortener-kube-webapp` (Load Balancer) are running:
 
 ![screenshot](images/kubernetes_clusters.png)
 
@@ -91,4 +92,4 @@ To generate a developer certificate run 'dotnet dev-certs https'. To trust the c
 For more information on configuring HTTPS see https://go.microsoft.com/fwlink/?linkid=848054.
 
 ### error from sender: invalid excludepatterns: [bin\ obj\]: syntax error in pattern
-Change "\" to "/" in .dockerignore file.
+Change "\" to "/" in `.dockerignore` file.

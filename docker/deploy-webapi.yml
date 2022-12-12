@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   name: another-url-shortener-kube-webapi
   labels:
-    app: weather-forecast
+    app: another-url-shortener
 spec:
   replicas: 1
   selector:
@@ -12,7 +12,7 @@ spec:
   template:
     metadata:
       labels:
-        app: weather-forecast
+        app: another-url-shortener
         service: another-url-shortener-kube-webapi
     spec:
       containers:
@@ -35,7 +35,7 @@ kind: Service
 metadata:
   name: another-url-shortener-kube-webapi
   labels:
-    app: weather-forecast
+    app: another-url-shortener
     service: another-url-shortener-kube-webapi
 spec:
   ports:
